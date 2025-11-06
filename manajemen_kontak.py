@@ -1,12 +1,21 @@
 "PROGRAM MANAJEMEN KONTAK"
 
+def membuka_kontak(path='kontak.txt'):
+    with open(path, mode='r') as file:
+        kontak = file.readlines()
+    return kontak
+
+def menyimpan_kontak(path='kontak.txt', isi=[]):
+    with open(path, mode='w') as file:
+        file.writelines(isi)
+
 class Kontak:
     def __init__(self):
-        self.kontak = []
+        self.kontak = membuka_kontak()
     def melihat_kontak(self):
         if self.kontak:
             for num, item in enumerate(self.kontak, start=1):
-                print(f'{num}. {item["nama"]} ({item["hp"]}, {item["email"]})')
+                print(f'{num}. ' + item)
         else:
             print("Tidak ada kontak yang sesuai!")
             return 1
@@ -16,7 +25,7 @@ class Kontak:
         nama = input("Masukkan nama kontak baru: ")
         hp = input("Masukkan nomor Hp kontak baru: ")
         email = input("Masukkan email kontak baru: ")
-        kontak_baru = {'nama': nama, 'hp': hp, 'email': email}
+        kontak_baru = f'{nama} ({hp}, {email})' + '\n'
         self.kontak.append(kontak_baru)
         print("Kontak baru berhasil ditambahkan !")
 
@@ -24,9 +33,15 @@ class Kontak:
         if self.melihat_kontak() == 1:
             return
         else:
-            i_hapus = int(input("Masukkan nomor yang akan dihapus : "))
-            del self.kontak[i_hapus - 1]
-            print("Kontak berhasil dihapus !")
+            try:
+                i_hapus = int(input("Masukkan nomor yang akan dihapus : "))
+                del self.kontak[i_hapus - 1]
+                print("Kontak berhasil dihapus !")
+            except:
+                print("Input yang anda masukkan salah!")
+
+    def keluar_kontak(self):
+        menyimpan_kontak(isi=self.kontak)
 
 kontak_kantor = Kontak()
 kontak_keluarga = Kontak()
@@ -46,6 +61,7 @@ while True:
     elif pilihan == "3":
         kontak_kantor.hapus_kontak()
     elif pilihan == "4":
+        kontak_kantor.keluar_kontak()
         break
     else:
         print("Andan memasukkan angka yang salah! silahkan diulang kembali")
